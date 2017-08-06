@@ -66,13 +66,14 @@ branch3-rtr1               : ok=4    changed=0    unreachable=0    failed=0
 #### Ansible project file/folder structure
 Below is the file structure for the ansible project
 
-* templates folder contains jinja2 (j2) templates used to generate device configurations
+* roles/base/templates folder contains jinja2 (j2) templates used to generate basic device configurations
+* roles/base/tasks/main.yml contains child task to generate base config
 * group_vars folder contains common configuration variables referenced in j2 templates
 * host_vars folder contains device specific configuration variables referenced in j2 templates
 * hosts file contains individual device hostnames and groupings of devices, used as an inventory for SSH/API access
 * configs folder contains configurations generated from j2 templates
 * logs folder contains configuration differences for each device when applying/validating configs
-* playbook* files are YAML files that initiate one or more tasks, like generating and applying configs
+* playbook-generate-apply-ios-config.yml initiate tasks, including generating and applying configs
 
 ```.
 ├── group_vars
@@ -83,7 +84,6 @@ Below is the file structure for the ansible project
 │   ├── branch2-rtr1
 │   └── branch3-rtr1
 ├── playbook-generate-apply-ios-config.yml
-├── playbook-ios-show-cmd-example.yml
 ├── README.md
 └── roles
     └── base
