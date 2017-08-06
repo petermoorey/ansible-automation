@@ -75,8 +75,7 @@ Below is the file structure for the ansible project
 * logs folder contains configuration differences for each device when applying/validating configs
 * playbook-generate-apply-ios-config.yml initiate tasks, including generating and applying configs
 
-```.
-├── group_vars
+```├── group_vars
 │   └── all.yml
 ├── hosts
 ├── host_vars
@@ -96,5 +95,4 @@ Below is the file structure for the ansible project
             ├── interfaces.j2
             ├── login-banner.j2
             ├── monitoring.j2
-            └── qos.j2
-```
+            └── qos.j2```
