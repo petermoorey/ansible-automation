@@ -12,9 +12,8 @@
     check_mode: no
     run_once: yes
     delegate_to: localhost
-  - file: path={{ inventory_dir }}/{{inventory_hostname}} state=absent
-    changed_when: false
-    check_mode: no
+  - file: path={{ inventory_dir }}/configs/{{inventory_hostname}} state=directory
+    
 
 - name: Generate configs
   hosts: branch_routers

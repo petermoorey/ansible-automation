@@ -1,2 +1,6 @@
 *retry
 *save*
+*configs*
+configs/**
+logs/*
+*logs*
