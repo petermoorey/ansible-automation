@@ -1,0 +1,19 @@
+---
+- hosts: branch-routers
+  gather_facts: no
+  connection: local
+
+  tasks:
+  - name: Connection info
+    set_fact:
+      provider:
+        host: "{{ inventory_hostname }}"
+
+  - name: Issue show version command and print results
+    ios_command:
+      provider: "{{ provider }}"
+      commands:
+        - show version
+    register: version
+  - debug: var=version.stdout_lines
+

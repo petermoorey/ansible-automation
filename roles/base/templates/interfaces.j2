@@ -1,0 +1,48 @@
+!
+interface {{ mgmt.int_name|default('Loopback10') }}
+ description {{ mgmt.description|default('device mgmt interface') }}
+ ip address {{ mgmt.ip_address }} {{ mgmt.ip_mask }}
+{# each following interface block is optional, configuration will be created if interface is defined in host_vars #}
+
+{% for ifnum,interface in wan|default({})|dictsort %}
+!
+interface {{ interface.int_name }}
+{% if interface.type == "isp" %}
+ description {{ interface.description|default('to ISP network') }}
+ ip vrf forwarding Internet_VRF_{{ ifnum }}
+{% else %}
+ description {{ interface.description|default('to MPLS network') }}
+{% endif %}
+ ip address {{ interface.ip_address }} {{ interface.ip_mask }}
+{% endfor %}
+
+{% if lan is defined %}
+!
+interface {{ lan.int_name }}
+ description {{ lan.description|default('to LAN network') }}
+ ip address {{ lan.ip_address }} {{ lan.ip_mask }}
+{% endif %}
+
+{% if lan_iot is defined %}
+!
+interface {{ lan_iot.int_name }}
+ encapsulation dot1Q {{ lan_iot.vlan_id|default('100') }}
+ description {{ lan_iot.description|default('to user network') }}
+ ip address {{ lan_iot.ip_address }} {{ lan_iot.ip_mask|default('255.255.255.0') }}
+{% endif %}
+
+{% if lan_data is defined %}
+!
+interface {{ lan_data.int_name }}
+ encapsulation dot1Q {{ lan_data.vlan_id|default('101') }}
+ description {{ lan_data.description|default('to another network') }}
+ ip address {{ lan_data.ip_address }} {{ lan_data.ip_mask|default('255.255.255.0') }}
+{% endif %}
+
+{% if lan_mgmt is defined %}
+!
+interface {{ lan_mgmt.int_name }}
+ encapsulation dot1Q {{ lan_mgmt.vlan_id|default('102') }}
+ description {{ lan_mgmt.description|default('to yet another network') }}
+ ip address {{ lan_mgmt.ip_address }} {{ lan_mgmt.ip_mask|default('255.255.255.0') }}
+{% endif %}

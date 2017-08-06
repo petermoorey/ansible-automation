@@ -1,0 +1,36 @@
+---
+role: vpn-spoke-europe
+
+wan:
+  0: 
+    type: isp 
+    int_name: FastEthernet0/0
+    ip_address: 10.100.102.2
+    ip_mask: 255.255.255.0
+    ip_gateway: 10.100.102.1
+
+mgmt:
+  int_name: Loopback10
+  ip_address: 192.168.66.1
+  ip_mask: 255.255.255.248
+
+lan:
+  int_name: Ethernet1/0
+  ip_address: 10.0.1.1
+  ip_mask: 255.255.255.0
+
+lan_iot:
+  int_name: Ethernet1/0.100
+  ip_address: 10.100.1.1
+  ip_mask: 255.255.255.0
+
+lan_data:
+  vlan_id: 44
+  int_name: Ethernet1/0.102
+  ip_address: 10.20.1.1
+  ip_mask: 255.255.255.0
+
+lan_mgmt:
+  int_name: Ethernet1/0.105
+  ip_address: 10.94.1.1
+  ip_mask: 255.255.255.0

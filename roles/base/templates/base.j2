@@ -1,0 +1,65 @@
+!
+no service pad
+service tcp-keepalives-in
+service tcp-keepalives-out
+service timestamps debug datetime
+service timestamps log datetime msec
+service password-encryption
+!
+hostname {{ inventory_hostname }}
+!
+no ip source-route
+!
+no ip bootp server
+!
+!
+ip domain list {{ system.domain_name }}
+ip domain name {{ system.domain_name }}
+!
+{% for name_server in system.name_servers %}
+ip name-server {{ name_server }}
+{% endfor %}
+!
+{% for ifnum,interface in wan|default({})|dictsort %}
+{% if interface.type == "isp" %}
+ip vrf Internet_VRF_{{ ifnum }}
+ip route vrf Internet_VRF_{{ ifnum }} 0.0.0.0 0.0.0.0 {{ interface.ip_gateway}} name default-to-internet
+{% endif %}
+{% endfor %}
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+{# include interface-level commands, prerequisite for source interfaces #}
+{% include './interfaces.j2' %}
+!
+ip ssh version 2
+ip scp server enable
+!
+ip domain lookup source-interface {{ mgmt.int_name|default('Loopback10') }}
+ip ftp source-interface {{ mgmt.int_name|default('Loopback10') }}
+logging source-interface {{ mgmt.int_name|default('Loopback10') }}
+snmp-server trap-source {{ mgmt.int_name|default('Loopback10') }}
+ntp source {{ mgmt.int_name|default('Loopback10') }}
+!
+{% for syslog_server in system.syslog %}
+logging host {{ syslog_server }}
+{% endfor %}
+!
+{% for ntp_server in system.ntp %}
+ntp server {{ ntp_server }}
+{% endfor %}
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ privilege level 15
+ transport input ssh
+line vty 5 15
+ privilege level 15
+ transport input ssh
+!
+End

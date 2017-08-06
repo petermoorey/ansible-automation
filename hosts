@@ -1,0 +1,24 @@
+#
+#   - Comments begin with the '#' character
+#   - Blank lines are ignored
+#   - Groups of hosts are delimited by [header] elements
+#   - You can enter hostnames or ip addresses
+#   - A hostname/ip can be a member of multiple groups
+
+[branch_routers]
+branch1-rtr1
+branch2-rtr1
+branch3-rtr1
+
+[datacenter-routers]
+datacenter-rtr1
+datacenter-rtr2
+
+[network:children]
+branch_routers
+datacenter-routers
+
+[branch_routers:vars]
+ansible_user=ansible
+ansible_ssh_pass=ansible
+os=ios

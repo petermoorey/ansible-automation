@@ -1,0 +1,47 @@
+---
+- name: Prepare for configuration build
+  hosts: branch_routers
+  connection: local
+
+  tasks:
+  - file: path={{ inventory_dir }}/configs state=directory
+    check_mode: no
+    run_once: yes
+    delegate_to: localhost
+  - file: path={{ inventory_dir }}/logs state=directory
+    check_mode: no
+    run_once: yes
+    delegate_to: localhost
+  - file: path={{ inventory_dir }}/{{inventory_hostname}} state=absent
+    changed_when: false
+    check_mode: no
+
+- name: Generate configs
+  hosts: branch_routers
+  roles:
+    - base
+
+- name: Assemble configs
+  hosts: branch_routers
+  connection: local
+  tasks:
+    - assemble:
+        src: "{{ inventory_dir }}/configs/{{inventory_hostname}}"
+        dest: "{{ inventory_dir }}/configs/{{inventory_hostname}}.conf"
+      check_mode: no
+
+    - name: apply configs
+      napalm_install_config:
+          hostname: "{{ inventory_hostname }}"
+          username: "{{ ansible_user }}"
+          password: "{{ ansible_ssh_pass }}"
+          dev_os: "{{ os }}"
+          config_file: "{{ inventory_dir }}/configs/{{ inventory_hostname }}.conf"
+          replace_config: false
+          get_diffs: true
+          commit_changes: 1
+          diff_file: "{{ inventory_dir }}/logs/{{ inventory_hostname }}.diff.conf"
+
+ # - name: Test a variable
+ #   debug: var=inventory_dir
+

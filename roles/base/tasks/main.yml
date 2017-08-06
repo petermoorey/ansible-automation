@@ -1,0 +1,5 @@
+---
+- name: Generate configuration files
+  template: src=base.j2 dest={{ inventory_dir }}/configs/{{ inventory_hostname }}/0-base.conf
+  check_mode: no
+  changed_when: false
