@@ -21,10 +21,15 @@ ip name-server {{ name_server }}
 {% endfor %}
 !
 {% for ifnum,interface in wan|default({})|dictsort %}
-{% if interface.type == "isp" %}
+{%   if interface.type == "isp" %}
 ip vrf Internet_VRF_{{ ifnum }}
 ip route vrf Internet_VRF_{{ ifnum }} 0.0.0.0 0.0.0.0 {{ interface.ip_gateway}} name default-to-internet
-{% endif %}
+!
+ip access-list extended acl-isp-protection
+ permit udp host 192.168.77.1 eq 4500 host {{ interface.ip_address }}
+ permit esp host 192.168.77.1 host {{ interface.ip_address }}
+ permit ip any any log
+{%   endif %}
 {% endfor %}
 !
 ip cef
