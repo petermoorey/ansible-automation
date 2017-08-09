@@ -10,6 +10,7 @@ interface {{ interface.int_name }}
 {% if interface.type == "isp" %}
  description {{ interface.description|default('to ISP network') }}
  ip vrf forwarding Internet_VRF_{{ ifnum }}
+ ip access-group acl-isp-protection in
 {% else %}
  description {{ interface.description|default('to MPLS network') }}
 {% endif %}
