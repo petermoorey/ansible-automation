@@ -1,0 +1,5 @@
+---
+- name: Generate VPN configuration files
+  template: src=vpn.j2 dest={{ inventory_dir }}/configs/{{ inventory_hostname }}/1-vpn.conf
+  check_mode: no
+  changed_when: false
